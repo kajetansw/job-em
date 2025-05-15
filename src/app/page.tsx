@@ -8,7 +8,7 @@ import { signOutAction } from "./actions";
 export default async function Home() {
   const supabase = await createClient();
 
-    const {
+  const {
     data: { user },
   } = await supabase.auth.getUser();
 
@@ -19,9 +19,11 @@ export default async function Home() {
   return (
     <>
       <h1>Hello!</h1>
-      <Dashboard/>
-      <Form action={signOutAction}> 
-        <Button type="submit" variant="outline">Sign out</Button>
+      <Dashboard />
+      <Form action={signOutAction}>
+        <Button type="submit" variant="outline">
+          Sign out
+        </Button>
       </Form>
     </>
   );

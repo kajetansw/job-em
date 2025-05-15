@@ -1,3 +1,3 @@
 export default function SignUpPage() {
-    return <div>TODO</div>
+  return <div>TODO</div>;
 }

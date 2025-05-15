@@ -1,9 +1,13 @@
+import {
+  ColorSchemeScript,
+  MantineProvider,
+  createTheme,
+  mantineHtmlProps,
+} from "@mantine/core";
 import type { Metadata } from "next";
-import { ColorSchemeScript, mantineHtmlProps, MantineProvider, createTheme } from '@mantine/core';
 
 import "./globals.css";
-import '@mantine/core/styles.css';
-import React from "react";
+import "@mantine/core/styles.css";
 
 const theme = createTheme({
   /** Put your mantine theme override here */
@@ -14,7 +18,9 @@ export const metadata: Metadata = {
   description: "Manage your job applications with ease.",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: { children: React.ReactNode }) {
   return (
     <html lang="en" {...mantineHtmlProps}>
       <head>

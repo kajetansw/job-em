@@ -8,14 +8,16 @@ import {
   Text,
   TextInput,
   Title,
-} from '@mantine/core';
+} from "@mantine/core";
 import "./page.css";
-import { FormMessage, Message } from '@/components/common/FormMessage';
-import { SubmitButton } from '@/components/sign-in/SubmitButton';
-import { signInAction } from '@/app/actions';
-import Form from 'next/form'
+import { signInAction } from "@/app/actions";
+import { FormMessage, type Message } from "@/components/common/FormMessage";
+import { SubmitButton } from "@/components/sign-in/SubmitButton";
+import Form from "next/form";
 
-export default async function SignInPage(props: { searchParams: Promise<Message> }) {
+export default async function SignInPage(props: {
+  searchParams: Promise<Message>;
+}) {
   const searchParams = await props.searchParams;
 
   return (
@@ -30,15 +32,28 @@ export default async function SignInPage(props: { searchParams: Promise<Message>
 
       <Paper withBorder shadow="sm" p={22} mt={30} radius="md">
         <Form action={signInAction}>
-          <TextInput name="email" label="Email" placeholder="you@mantine.dev" required radius="md" />
-          <PasswordInput name="password" label="Password" placeholder="Your password" required mt="md" radius="md" />
+          <TextInput
+            name="email"
+            label="Email"
+            placeholder="you@mantine.dev"
+            required
+            radius="md"
+          />
+          <PasswordInput
+            name="password"
+            label="Password"
+            placeholder="Your password"
+            required
+            mt="md"
+            radius="md"
+          />
           <Group justify="space-between" mt="lg">
             <Checkbox label="Remember me" />
             <Anchor component="button" size="sm">
               Forgot password?
             </Anchor>
           </Group>
-          
+
           <SubmitButton />
 
           <FormMessage message={searchParams} />
@@ -47,4 +62,3 @@ export default async function SignInPage(props: { searchParams: Promise<Message>
     </Container>
   );
 }
-

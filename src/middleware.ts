@@ -1,10 +1,15 @@
-import { NextResponse, type NextRequest } from "next/server";
 import { updateSession } from "@/utils/supabase/middleware";
+import { type NextRequest, NextResponse } from "next/server";
 
 export async function middleware(request: NextRequest) {
-  const publicRoutes = ['/sign-in', '/sign-up', '/forgot-password', '/auth/callback'];
-  const isPublicRoute = publicRoutes.some(route => 
-    request.nextUrl.pathname.startsWith(route)
+  const publicRoutes = [
+    "/sign-in",
+    "/sign-up",
+    "/forgot-password",
+    "/auth/callback",
+  ];
+  const isPublicRoute = publicRoutes.some((route) =>
+    request.nextUrl.pathname.startsWith(route),
   );
 
   if (isPublicRoute) {
