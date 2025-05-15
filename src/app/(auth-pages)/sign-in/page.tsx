@@ -35,7 +35,7 @@ export default async function SignInPage(props: {
           <TextInput
             name="email"
             label="Email"
-            placeholder="you@mantine.dev"
+            placeholder="you@yourmail.com"
             required
             radius="md"
           />
