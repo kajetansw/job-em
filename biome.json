@@ -26,6 +26,9 @@
       },
       "complexity": {
         "noForEach": "off"
+      },
+      "correctness": {
+        "noUnusedImports": "error"
       }
     }
   },
