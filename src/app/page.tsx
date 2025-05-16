@@ -1,5 +1,5 @@
 import Dashboard from "@/components/home/Dashboard/Dashboard";
-import { createClient } from "@/utils/supabase/server";
+import { createClient } from "@/utils/supabase/client";
 import { Button } from "@mantine/core";
 import Form from "next/form";
 import { redirect } from "next/navigation";
