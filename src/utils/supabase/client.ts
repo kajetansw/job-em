@@ -2,7 +2,9 @@ import type { Database } from "@/models/database";
 import { createBrowserClient, createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 
-export const createClient = async (type: "server" | "browser" = "server") => {
+export const createSupabaseClient = async (
+  type: "server" | "browser" = "server",
+) => {
   if (type === "browser") {
     return createBrowserClient<Database>(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,

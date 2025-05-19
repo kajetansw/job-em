@@ -1,12 +1,12 @@
 import Dashboard from "@/components/home/Dashboard/Dashboard";
-import { createClient } from "@/utils/supabase/client";
+import { createSupabaseClient } from "@/utils/supabase/client";
 import { Button } from "@mantine/core";
 import Form from "next/form";
 import { redirect } from "next/navigation";
 import { signOutAction } from "./actions";
 
 export default async function Home() {
-  const supabase = await createClient();
+  const supabase = await createSupabaseClient();
 
   const {
     data: { user },
