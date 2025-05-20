@@ -5,7 +5,6 @@ import {
   mantineHtmlProps,
 } from "@mantine/core";
 import type { Metadata } from "next";
-
 import "./globals.css";
 import "@mantine/core/styles.css";
 
