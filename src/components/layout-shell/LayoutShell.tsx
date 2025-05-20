@@ -17,6 +17,7 @@ import type React from "react";
 import "./LayoutShell.css";
 import Image from "next/image";
 import { redirect } from "next/navigation";
+import { match } from "ts-pattern";
 
 const menuItems = [
   { icon: IconHome2, label: "Home", href: "/" },
@@ -104,26 +105,27 @@ interface NavbarLinkProps {
 function NavbarLink({ icon: Icon, label, onClick, variant }: NavbarLinkProps) {
   return (
     <>
-      {variant === "mobile" && (
-        <Flex justify="start">
-          <UnstyledButton onClick={onClick} className="link">
-            <Icon size={20} stroke={1.5} />
-            <Text ml="sm">{label}</Text>
-          </UnstyledButton>
-        </Flex>
-      )}
-
-      {variant === "full" && (
-        <Tooltip
-          label={label}
-          position="right"
-          transitionProps={{ duration: 0 }}
-        >
-          <UnstyledButton onClick={onClick} className="link">
-            <Icon size={20} stroke={1.5} />
-          </UnstyledButton>
-        </Tooltip>
-      )}
+      {match(variant)
+        .with("mobile", () => (
+          <Flex justify="start">
+            <UnstyledButton onClick={onClick} className="link">
+              <Icon size={20} stroke={1.5} />
+              <Text ml="sm">{label}</Text>
+            </UnstyledButton>
+          </Flex>
+        ))
+        .with("full", () => (
+          <Tooltip
+            label={label}
+            position="right"
+            transitionProps={{ duration: 0 }}
+          >
+            <UnstyledButton onClick={onClick} className="link">
+              <Icon size={20} stroke={1.5} />
+            </UnstyledButton>
+          </Tooltip>
+        ))
+        .exhaustive()}
     </>
   );
 }
