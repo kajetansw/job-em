@@ -3,7 +3,7 @@
 }
 
 .link {
-  width: 50px;
+  width: auto;
   height: 50px;
   border-radius: var(--mantine-radius-md);
   display: flex;

@@ -7,6 +7,7 @@ import {
   Container,
   Flex,
   Stack,
+  Text,
   Tooltip,
   UnstyledButton,
 } from "@mantine/core";
@@ -33,7 +34,13 @@ export default function LayoutShell({ children }: Props) {
     <NavbarLink
       {...link}
       key={link.label}
-      onClick={() => redirect(link.href)}
+      onClick={() => {
+        if (opened) {
+          toggle();
+        }
+        redirect(link.href);
+      }}
+      variant={opened ? "mobile" : "full"}
     />
   ));
 
@@ -73,6 +80,7 @@ export default function LayoutShell({ children }: Props) {
             icon={IconLogout}
             label="Logout"
             onClick={signOutAction}
+            variant={opened ? "mobile" : "full"}
           />
         </Stack>
       </AppShell.Navbar>
@@ -90,14 +98,32 @@ interface NavbarLinkProps {
   icon: typeof IconHome2;
   label: string;
   onClick: () => void;
+  variant: "mobile" | "full";
 }
 
-function NavbarLink({ icon: Icon, label, onClick }: NavbarLinkProps) {
+function NavbarLink({ icon: Icon, label, onClick, variant }: NavbarLinkProps) {
   return (
-    <Tooltip label={label} position="right" transitionProps={{ duration: 0 }}>
-      <UnstyledButton onClick={onClick} className="link">
-        <Icon size={20} stroke={1.5} />
-      </UnstyledButton>
-    </Tooltip>
+    <>
+      {variant === "mobile" && (
+        <Flex justify="start">
+          <UnstyledButton onClick={onClick} className="link">
+            <Icon size={20} stroke={1.5} />
+            <Text ml="sm">{label}</Text>
+          </UnstyledButton>
+        </Flex>
+      )}
+
+      {variant === "full" && (
+        <Tooltip
+          label={label}
+          position="right"
+          transitionProps={{ duration: 0 }}
+        >
+          <UnstyledButton onClick={onClick} className="link">
+            <Icon size={20} stroke={1.5} />
+          </UnstyledButton>
+        </Tooltip>
+      )}
+    </>
   );
 }
