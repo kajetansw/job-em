@@ -1,4 +1,7 @@
 import { createSupabaseClient } from "@/utils/supabase/client";
+import { groupBy } from "lodash";
+import { DateTime } from "luxon";
+import { JobChart } from "./JobChart";
 
 export default async function Dashboard() {
   const supabase = await createSupabaseClient();
@@ -16,11 +19,27 @@ export default async function Dashboard() {
     );
   }
 
-  return (
-    <div>
-      <h1>Dashboard</h1>
-      <h2>data</h2>
-      <pre>{JSON.stringify(data)}</pre>
-    </div>
-  );
+  return <JobChart items={toChartData(data)} />;
 }
+
+/*
+ * utils
+ */
+
+const toChartData = (data: { created_at: string }[]) => {
+  const normalizeDates = (d: (typeof data)[number]) => ({
+    ...d,
+    created_at:
+      DateTime.fromISO(d.created_at).startOf("day").toFormat("LLL dd, y") ?? "",
+  });
+
+  const groupedByCreatedDate = groupBy(
+    data,
+    (d) => normalizeDates(d).created_at,
+  );
+
+  return Object.entries(groupedByCreatedDate).map(([date, items]) => ({
+    date,
+    sent: items?.length ?? 0,
+  }));
+};
