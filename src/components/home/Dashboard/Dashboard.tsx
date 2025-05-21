@@ -25,39 +25,40 @@ export default async function Dashboard() {
  * utils
  */
 
-const toChartData = (data: { created_at: string }[]) => {
+const toChartData = (applications: { created_at: string }[]) => {
   const formatDate = (date: DateTime) => date.toFormat("LLL dd, y");
 
-  const dates = data.map((d) => DateTime.fromISO(d.created_at));
+  const dates = applications.map((d) => DateTime.fromISO(d.created_at));
 
-  const range = Interval.fromDateTimes(
-    DateTime.min(...dates) ?? DateTime.now(),
-    DateTime.max(...dates)?.plus({ day: 1 }) ?? DateTime.now(),
-  )
+  const minDate = DateTime.min(...dates) ?? DateTime.now();
+  const maxDate = (DateTime.max(...dates) ?? DateTime.now()).plus({ day: 1 });
+
+  const dateRange = Interval.fromDateTimes(minDate, maxDate)
     .splitBy({ day: 1 })
     .map((d) => d.start)
-    .filter(Boolean) as DateTime[];
+    .filter((date): date is DateTime => date !== null);
 
-  const groupedByCreatedDate = range.reduce(
-    (acc, curr) => {
-      const toFormattedDate = (dateISO: string) =>
-        formatDate(DateTime.fromISO(dateISO));
+  const groupedByCreatedDate = dateRange.reduce<
+    Record<string, typeof applications>
+  >((acc, currentDate) => {
+    const currentDateFormatted = formatDate(currentDate);
 
-      return {
-        ...acc,
-        [formatDate(curr)]: data
-          .filter((d) => toFormattedDate(d.created_at) === formatDate(curr))
-          .map((d) => ({
-            ...d,
-            created_at: toFormattedDate(d.created_at),
-          })),
-      };
-    },
-    {} as Record<string, typeof data>,
-  );
+    acc[currentDateFormatted] = applications
+      .filter(
+        (application) =>
+          formatDate(DateTime.fromISO(application.created_at)) ===
+          currentDateFormatted,
+      )
+      .map((application) => ({
+        ...application,
+        created_at: currentDateFormatted,
+      }));
 
-  return Object.entries(groupedByCreatedDate).map(([date, items]) => ({
+    return acc;
+  }, {});
+
+  return Object.entries(groupedByCreatedDate).map(([date, applications]) => ({
     date,
-    sent: items.length,
+    sent: applications.length,
   }));
 };
