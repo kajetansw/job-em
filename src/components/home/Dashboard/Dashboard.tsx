@@ -1,6 +1,6 @@
 import { createSupabaseClient } from "@/utils/supabase/client";
 import { DateTime, Interval } from "luxon";
-import { JobChart } from "./JobChart";
+import { SentJobChart } from "./JobChart";
 
 export default async function Dashboard() {
   const supabase = await createSupabaseClient();
@@ -18,7 +18,7 @@ export default async function Dashboard() {
     );
   }
 
-  return <JobChart items={toChartData(data)} />;
+  return <SentJobChart items={toChartData(data)} />;
 }
 
 /*
