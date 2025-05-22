@@ -1,4 +1,4 @@
-import LayoutShell from "@/components/layout-shell/LayoutShell";
+import LayoutShell from "@/components/LayoutShell/LayoutShell";
 
 export default function MainLayout({
   children,

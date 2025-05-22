@@ -1,6 +1,6 @@
+import { Providers } from "@/context/Providers";
 import {
   ColorSchemeScript,
-  MantineProvider,
   createTheme,
   mantineHtmlProps,
 } from "@mantine/core";
@@ -32,9 +32,7 @@ export default function RootLayout({
         />
       </head>
       <body>
-        <MantineProvider theme={theme} defaultColorScheme="auto">
-          {children}
-        </MantineProvider>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
