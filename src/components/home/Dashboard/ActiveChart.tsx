@@ -1,25 +1,26 @@
 "use client";
 
 import { useFilters } from "@/context/filters";
-import { toChartData } from "@/utils/dashboard/toChartData";
+import type { JobApplication } from "@/models/jobApplication";
+import { toAggregatedChartData } from "@/utils/dashboard/toChartData";
 import { getDateTimeRangeDays } from "@/utils/getDateTimeRangeDays";
 import { CompositeChart } from "@mantine/charts";
 
 interface Props {
-  ongoingItems: { created_at: string }[];
-  rejectedItems: { created_at: string }[];
+  activeItems: JobApplication[];
 }
 
-export function OngoingRejectedChart({ ongoingItems, rejectedItems }: Props) {
+export function ActiveChart({ activeItems }: Props) {
   const { dateRange } = useFilters();
 
-  const chartData = toChartData(
+  const chartData = toAggregatedChartData(
     getDateTimeRangeDays(dateRange.start, dateRange.end),
     {
-      ongoing: ongoingItems,
-      rejected: rejectedItems,
+      active: activeItems,
     },
   );
+
+  console.log(chartData);
 
   return (
     <>
@@ -31,21 +32,16 @@ export function OngoingRejectedChart({ ongoingItems, rejectedItems }: Props) {
         xAxisProps={{ padding: { left: 20, right: 20 } }}
         series={[
           {
-            name: "ongoing",
-            label: "Ongoing",
-            color: "yellow.4",
+            name: "active",
+            label: "Active every day",
+            color: "green.4",
             type: "area",
           },
-          { name: "rejected", label: "Rejected", color: "red.4", type: "area" },
         ]}
         curveType="linear"
         tooltipAnimationDuration={200}
         yAxisProps={{
-          tickCount:
-            Math.max(
-              ...chartData.map((item) => item.ongoing),
-              ...chartData.map((item) => item.rejected),
-            ) + 1,
+          tickCount: Math.max(...chartData.map((item) => item.active)) + 1,
           allowDecimals: false,
         }}
         withLegend

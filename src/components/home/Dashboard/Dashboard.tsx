@@ -1,6 +1,6 @@
 import { createSupabaseClient } from "@/utils/supabase/client";
 import { Flex } from "@mantine/core";
-import { OngoingRejectedChart } from "./OngoingRejectedChart";
+import { ActiveChart } from "./ActiveChart";
 import { SentChart } from "./SentChart";
 
 export default async function Dashboard() {
@@ -8,33 +8,19 @@ export default async function Dashboard() {
 
   const sentApplications = await supabase
     .from("job_applications")
-    .select("*, company:companies (*)")
-    .eq("status", "SENT");
+    .select("*, company:companies (*)");
 
-  const ongoingApplications = await supabase
+  const activeApplications = await supabase
     .from("job_applications")
     .select("*, company:companies (*)")
-    .eq("status", "ONGOING");
+    .in("status", ["SENT", "ONGOING", "REJECTED"]);
 
-  const rejectedApplications = await supabase
-    .from("job_applications")
-    .select("*, company:companies (*)")
-    .eq("status", "REJECTED");
-
-  if (
-    sentApplications.error ||
-    ongoingApplications.error ||
-    rejectedApplications.error
-  ) {
+  if (sentApplications.error || activeApplications.error) {
     return (
       <>
         <h2>error</h2>
         <pre>
-          {JSON.stringify(
-            sentApplications.error ??
-              ongoingApplications.error ??
-              rejectedApplications.error,
-          )}
+          {JSON.stringify(sentApplications.error ?? activeApplications.error)}
         </pre>
       </>
     );
@@ -44,10 +30,7 @@ export default async function Dashboard() {
     <>
       <Flex direction="column" gap="xl">
         <SentChart items={sentApplications.data} />
-        <OngoingRejectedChart
-          ongoingItems={ongoingApplications.data}
-          rejectedItems={rejectedApplications.data}
-        />
+        <ActiveChart activeItems={activeApplications.data} />
       </Flex>
     </>
   );

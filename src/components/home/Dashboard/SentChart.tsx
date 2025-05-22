@@ -1,12 +1,13 @@
 "use client";
 
 import { useFilters } from "@/context/filters";
+import type { JobApplication } from "@/models/jobApplication";
 import { toChartData } from "@/utils/dashboard/toChartData";
 import { getDateTimeRangeDays } from "@/utils/getDateTimeRangeDays";
 import { CompositeChart } from "@mantine/charts";
 
 interface Props {
-  items: { created_at: string }[];
+  items: JobApplication[];
 }
 
 export function SentChart({ items }: Props) {
@@ -28,7 +29,12 @@ export function SentChart({ items }: Props) {
         maxBarWidth={30}
         xAxisProps={{ padding: { left: 20, right: 20 } }}
         series={[
-          { name: "sent", label: "Sent", color: "blue.4", type: "area" },
+          {
+            name: "sent",
+            label: "Sent per day",
+            color: "blue.4",
+            type: "area",
+          },
         ]}
         curveType="linear"
         tooltipAnimationDuration={200}
