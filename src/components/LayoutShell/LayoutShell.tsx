@@ -4,7 +4,6 @@ import { signOutAction } from "@/app/actions";
 import {
   AppShell,
   Burger,
-  Container,
   Flex,
   Stack,
   Text,
@@ -18,6 +17,7 @@ import "./LayoutShell.css";
 import Image from "next/image";
 import { redirect } from "next/navigation";
 import { match } from "ts-pattern";
+import { FiltersDateRangePicker } from "./FiltersDateRangePicker";
 
 const menuItems = [
   { icon: IconHome2, label: "Home", href: "/" },
@@ -65,7 +65,7 @@ export default function LayoutShell({ children }: Props) {
             size="sm"
           />
           <Image src="/logo.svg" alt="Logo" width={210} height={60} />
-          <Container w={39} h={60} m={0} />
+          <FiltersDateRangePicker />
         </Flex>
       </AppShell.Header>
 
