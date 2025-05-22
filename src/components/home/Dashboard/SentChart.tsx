@@ -1,20 +1,22 @@
 "use client";
 
 import { useFilters } from "@/context/filters";
+import { toChartData } from "@/utils/dashboard/toChartData";
 import { getDateTimeRangeDays } from "@/utils/getDateTimeRangeDays";
 import { CompositeChart } from "@mantine/charts";
-import { DateTime } from "luxon";
 
 interface Props {
   items: { created_at: string }[];
 }
 
-export function JobChart({ items }: Props) {
+export function SentChart({ items }: Props) {
   const { dateRange } = useFilters();
 
   const chartData = toChartData(
     getDateTimeRangeDays(dateRange.start, dateRange.end),
-    items,
+    {
+      sent: items,
+    },
   );
 
   return (
@@ -41,38 +43,3 @@ export function JobChart({ items }: Props) {
     </>
   );
 }
-
-/**
- * utils
- */
-
-const toChartData = (
-  daysRange: DateTime[],
-  applications: { created_at: string }[],
-) => {
-  const formatDate = (date: DateTime) => date.toFormat("LLL dd, y");
-
-  const groupedByCreatedDate = daysRange.reduce<
-    Record<string, typeof applications>
-  >((acc, currentDate) => {
-    const currentDateFormatted = formatDate(currentDate);
-
-    acc[currentDateFormatted] = applications
-      .filter(
-        (application) =>
-          formatDate(DateTime.fromISO(application.created_at)) ===
-          currentDateFormatted,
-      )
-      .map((application) => ({
-        ...application,
-        created_at: currentDateFormatted,
-      }));
-
-    return acc;
-  }, {});
-
-  return Object.entries(groupedByCreatedDate).map(([date, applications]) => ({
-    date,
-    sent: applications.length,
-  }));
-};
