@@ -6,15 +6,16 @@ import { SentChart } from "./SentChart";
 export default async function Dashboard() {
   const supabase = await createSupabaseClient();
 
-  const applications = await supabase
+  const activeApplications = await supabase
     .from("job_applications")
-    .select("*, company:companies (*)");
+    .select("*, company:companies (*)")
+    .neq("status", "INACTIVE");
 
-  if (applications.error) {
+  if (activeApplications.error) {
     return (
       <>
         <h2>error</h2>
-        <pre>{JSON.stringify(applications.error)}</pre>
+        <pre>{JSON.stringify(activeApplications.error)}</pre>
       </>
     );
   }
@@ -22,8 +23,8 @@ export default async function Dashboard() {
   return (
     <>
       <Flex direction="column" gap="xl">
-        <SentChart items={applications.data} />
-        <ActiveChart activeItems={applications.data} />
+        <SentChart items={activeApplications.data} />
+        <ActiveChart activeItems={activeApplications.data} />
       </Flex>
     </>
   );
