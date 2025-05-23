@@ -2,7 +2,7 @@
 
 import { useFilters } from "@/context/filters";
 import type { JobApplication } from "@/models/jobApplication";
-import { toChartData } from "@/utils/dashboard/toChartData";
+import { toSentChartData } from "@/utils/dashboard/chartData";
 import { getDateTimeRangeDays } from "@/utils/getDateTimeRangeDays";
 import { CompositeChart } from "@mantine/charts";
 
@@ -13,7 +13,7 @@ interface Props {
 export function SentChart({ items }: Props) {
   const { dateRange } = useFilters();
 
-  const chartData = toChartData(
+  const chartData = toSentChartData(
     getDateTimeRangeDays(dateRange.start, dateRange.end),
     {
       sent: items,

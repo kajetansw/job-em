@@ -2,7 +2,7 @@
 
 import { useFilters } from "@/context/filters";
 import type { JobApplication } from "@/models/jobApplication";
-import { toAggregatedChartData } from "@/utils/dashboard/toChartData";
+import { toActiveChartData } from "@/utils/dashboard/chartData";
 import { getDateTimeRangeDays } from "@/utils/getDateTimeRangeDays";
 import { CompositeChart } from "@mantine/charts";
 
@@ -13,14 +13,12 @@ interface Props {
 export function ActiveChart({ activeItems }: Props) {
   const { dateRange } = useFilters();
 
-  const chartData = toAggregatedChartData(
+  const chartData = toActiveChartData(
     getDateTimeRangeDays(dateRange.start, dateRange.end),
     {
       active: activeItems,
     },
   );
-
-  console.log(chartData);
 
   return (
     <>

@@ -6,22 +6,15 @@ import { SentChart } from "./SentChart";
 export default async function Dashboard() {
   const supabase = await createSupabaseClient();
 
-  const sentApplications = await supabase
+  const applications = await supabase
     .from("job_applications")
     .select("*, company:companies (*)");
 
-  const activeApplications = await supabase
-    .from("job_applications")
-    .select("*, company:companies (*)")
-    .in("status", ["SENT", "ONGOING", "REJECTED"]);
-
-  if (sentApplications.error || activeApplications.error) {
+  if (applications.error) {
     return (
       <>
         <h2>error</h2>
-        <pre>
-          {JSON.stringify(sentApplications.error ?? activeApplications.error)}
-        </pre>
+        <pre>{JSON.stringify(applications.error)}</pre>
       </>
     );
   }
@@ -29,8 +22,8 @@ export default async function Dashboard() {
   return (
     <>
       <Flex direction="column" gap="xl">
-        <SentChart items={sentApplications.data} />
-        <ActiveChart activeItems={activeApplications.data} />
+        <SentChart items={applications.data} />
+        <ActiveChart activeItems={applications.data} />
       </Flex>
     </>
   );

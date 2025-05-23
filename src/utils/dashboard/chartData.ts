@@ -1,14 +1,15 @@
-import type { JobApplication } from "@/models/jobApplication";
+import {
+  INACTIVE_APPLICATION_STATUSES,
+  type JobApplication,
+} from "@/models/jobApplication";
 import { DateTime } from "luxon";
 
 type Output<TKey extends string> = ({ date: string } & Record<TKey, number>)[];
 
-export const toChartData = <TKey extends string>(
+export const toSentChartData = <TKey extends string>(
   daysRange: DateTime[],
   itemsData: Record<TKey, JobApplication[]>,
 ): Output<TKey> => {
-  const formatDate = (date: DateTime) => date.toFormat("LLL dd, y");
-
   const result: Record<string, Record<TKey, number>> = {};
 
   daysRange.forEach((date) => {
@@ -36,12 +37,10 @@ export const toChartData = <TKey extends string>(
   }));
 };
 
-export const toAggregatedChartData = <TKey extends string>(
+export const toActiveChartData = <TKey extends string>(
   daysRange: DateTime[],
   itemsData: Record<TKey, JobApplication[]>,
 ): Output<TKey> => {
-  const formatDate = (date: DateTime) => date.toFormat("LLL dd, y");
-
   const result: Record<string, Record<TKey, number>> = {};
   let currentCount = 0;
 
@@ -52,15 +51,14 @@ export const toAggregatedChartData = <TKey extends string>(
         (item) =>
           formatDate(DateTime.fromISO(item.created_at)) === formattedDate,
       );
-      const activeItems = itemsForDay;
       const inactiveItems = items.filter(
         (item) =>
           item.updated_at &&
           formatDate(DateTime.fromISO(item.updated_at)) === formattedDate &&
-          item.status === "REJECTED",
+          (INACTIVE_APPLICATION_STATUSES as string[]).includes(item.status),
       );
 
-      currentCount += activeItems.length - inactiveItems.length;
+      currentCount += itemsForDay.length - inactiveItems.length;
 
       if (!result[formattedDate]) {
         result[formattedDate] = {} as Record<TKey, number>;
@@ -75,3 +73,9 @@ export const toAggregatedChartData = <TKey extends string>(
     ...counts,
   }));
 };
+
+/*
+ * utils
+ */
+
+const formatDate = (date: DateTime) => date.toFormat("LLL dd, y");
