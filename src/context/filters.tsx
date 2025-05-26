@@ -15,8 +15,8 @@ interface FiltersContextType {
 
 export const initialFilters = {
   dateRange: {
-    start: DateTime.now().minus({ week: 2 }),
-    end: DateTime.now(),
+    start: DateTime.now().minus({ week: 2 }).startOf("day"),
+    end: DateTime.now().startOf("day"),
   },
 } satisfies DeepPartial<FiltersContextType>;
 

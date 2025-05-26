@@ -3,7 +3,7 @@
 import { useFilters } from "@/context/filters";
 import type { JobApplication } from "@/models/jobApplication";
 import { toActiveChartData } from "@/utils/dashboard/chartData";
-import { getDateTimeRangeDays } from "@/utils/getDateTimeRangeDays";
+import { getDateTimeRangeDays } from "@/utils/dates/getDateTimeRangeDays";
 import { CompositeChart } from "@mantine/charts";
 
 interface Props {

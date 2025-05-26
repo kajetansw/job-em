@@ -3,7 +3,7 @@
 import { useFilters } from "@/context/filters";
 import type { JobApplication } from "@/models/jobApplication";
 import { toSentChartData } from "@/utils/dashboard/chartData";
-import { getDateTimeRangeDays } from "@/utils/getDateTimeRangeDays";
+import { getDateTimeRangeDays } from "@/utils/dates/getDateTimeRangeDays";
 import { CompositeChart } from "@mantine/charts";
 
 interface Props {
@@ -27,7 +27,7 @@ export function SentChart({ items }: Props) {
         data={chartData}
         dataKey="date"
         maxBarWidth={30}
-        xAxisProps={{ padding: { left: 20, right: 20 } }}
+        xAxisProps={{ padding: { left: -15, right: -15 } }}
         series={[
           {
             name: "sent",

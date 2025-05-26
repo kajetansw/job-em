@@ -3,6 +3,8 @@ import {
   type JobApplication,
 } from "@/models/jobApplication";
 import { DateTime } from "luxon";
+import { getDateTimeRangeDays } from "../dates/getDateTimeRangeDays";
+import { sort } from "../dates/sort";
 
 type Output<TKey extends string> = ({ date: string } & Record<TKey, number>)[];
 
@@ -41,10 +43,28 @@ export const toActiveChartData = <TKey extends string>(
   daysRange: DateTime[],
   itemsData: Record<TKey, JobApplication[]>,
 ): Output<TKey> => {
+  const visibleDays = new Set(daysRange.map(formatDate));
+
   const result: Record<string, Record<TKey, number>> = {};
   let currentCount = 0;
 
-  for (const currentDay of daysRange) {
+  const getCalculationDates = () => {
+    const itemsDates = Object.values<JobApplication[]>(itemsData)
+      .flat()
+      .map((item) => DateTime.fromISO(item.created_at));
+    const sorted = sort(itemsDates);
+
+    if (sorted.length < 2 || daysRange.length < 2) {
+      return [];
+    }
+
+    const first = DateTime.min(sorted[0], daysRange[0]);
+    const last = DateTime.max(sorted.at(-1)!, daysRange.at(-1)!);
+
+    return getDateTimeRangeDays(first, last);
+  };
+
+  for (const currentDay of getCalculationDates()) {
     for (const [key, items] of Object.entries<JobApplication[]>(itemsData)) {
       const formattedDate = formatDate(currentDay);
       const itemsForDay = items.filter(
@@ -68,10 +88,12 @@ export const toActiveChartData = <TKey extends string>(
     }
   }
 
-  return Object.entries(result).map(([date, counts]) => ({
-    date,
-    ...counts,
-  }));
+  return Object.entries(result)
+    .filter(([date]) => visibleDays.has(date))
+    .map(([date, counts]) => ({
+      date,
+      ...counts,
+    }));
 };
 
 /*
