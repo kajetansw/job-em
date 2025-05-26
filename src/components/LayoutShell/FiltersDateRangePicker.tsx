@@ -21,6 +21,10 @@ export const FiltersDateRangePicker = () => {
         )
       }
       mr="lg"
+      clearable
+      clearButtonProps={{
+        onClick: dateRange.reset,
+      }}
     />
   );
 };

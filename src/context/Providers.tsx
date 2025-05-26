@@ -1,6 +1,7 @@
 "use client";
 
 import { MantineProvider, createTheme } from "@mantine/core";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { FiltersContextProvider } from "./filters";
 
 const theme = createTheme({
@@ -10,7 +11,9 @@ const theme = createTheme({
 export const Providers = ({ children }: { children: React.ReactNode }) => {
   return (
     <MantineProvider theme={theme} defaultColorScheme="auto">
-      <FiltersContextProvider>{children}</FiltersContextProvider>
+      <NuqsAdapter>
+        <FiltersContextProvider>{children}</FiltersContextProvider>
+      </NuqsAdapter>
     </MantineProvider>
   );
 };

@@ -1,14 +1,24 @@
+import type { DeepPartial } from "@/utils/types";
 import { DateTime } from "luxon";
+import { parseAsTimestamp, useQueryState } from "nuqs";
 import type React from "react";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext } from "react";
 
 interface FiltersContextType {
   dateRange: {
     start: DateTime;
     end: DateTime;
     set: (start: DateTime, end: DateTime) => void;
+    reset: () => void;
   };
 }
+
+export const initialFilters = {
+  dateRange: {
+    start: DateTime.now().minus({ week: 2 }),
+    end: DateTime.now(),
+  },
+} satisfies DeepPartial<FiltersContextType>;
 
 const FiltersContext = createContext<FiltersContextType | undefined>(undefined);
 
@@ -23,26 +33,35 @@ export const useFilters = () => {
 export const FiltersContextProvider = ({
   children,
 }: { children: React.ReactNode }) => {
-  const [filters, setFilters] = useState({
-    range: {
-      start: DateTime.now().minus({ week: 2 }),
-      end: DateTime.now(),
-    },
-  });
+  const [start, setStart] = useQueryState(
+    "start",
+    parseAsTimestamp.withDefault(initialFilters.dateRange.start.toJSDate()),
+  );
+  const [end, setEnd] = useQueryState(
+    "end",
+    parseAsTimestamp.withDefault(initialFilters.dateRange.end.toJSDate()),
+  );
+
   const setDateRange = (start: DateTime, end: DateTime) => {
-    setFilters((prev) => ({
-      ...prev,
-      range: { start, end },
-    }));
+    setStart(start.toJSDate());
+    setEnd(end.toJSDate());
+  };
+  const resetDateRange = () => {
+    setStart(initialFilters.dateRange.start.toJSDate());
+    setEnd(initialFilters.dateRange.end.toJSDate());
+  };
+
+  const filtersRange = {
+    start: DateTime.fromJSDate(start),
+    end: DateTime.fromJSDate(end),
+    set: setDateRange,
+    reset: resetDateRange,
   };
 
   return (
     <FiltersContext.Provider
       value={{
-        dateRange: {
-          ...filters.range,
-          set: setDateRange,
-        },
+        dateRange: filtersRange,
       }}
     >
       {children}

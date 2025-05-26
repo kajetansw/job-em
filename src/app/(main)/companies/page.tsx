@@ -5,8 +5,6 @@ export default async function CompaniesPage() {
   const supabase = await createSupabaseClient();
   const companies = await supabase.from("companies").select("*");
 
-  console.log(companies);
-
   // TODO improve error management
   if (companies.error) {
     return (
