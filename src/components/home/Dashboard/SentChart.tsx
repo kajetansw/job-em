@@ -33,7 +33,7 @@ export function SentChart({ items }: Props) {
             name: "sent",
             label: "Sent per day",
             color: "blue.4",
-            type: "area",
+            type: "bar",
           },
         ]}
         curveType="linear"
@@ -44,7 +44,7 @@ export function SentChart({ items }: Props) {
         }}
         withLegend
         withYAxis={false}
-        withPointLabels
+        withBarValueLabel
       />
     </>
   );

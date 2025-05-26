@@ -11,6 +11,7 @@ export default async function Dashboard() {
     .select("*, company:companies (*)")
     .neq("status", "INACTIVE");
 
+  // TODO improve error management
   if (activeApplications.error) {
     return (
       <>
